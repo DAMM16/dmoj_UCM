@@ -1,0 +1,41 @@
+.idea
+.vscode
+.sass-cache
+*.sqlite3
+*.py[co]
+*.mo
+*~
+*.swp
+dmoj/local_settings.py
+resources/dark
+resources/martor-description.css
+resources/style.css
+resources/vars.scss
+sass_processed
+# Entorno virtual
+venv/
+env/
+dmojsite/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configuración local sensible
+local_settings.py
+*.env
+
+# Archivos estáticos compilados
+static/cache/
+static/jsi18n/
+static/icons/
+static/plugins/
+
+# Logs y bases de datos locales
+*.log
+db.sqlite3
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
