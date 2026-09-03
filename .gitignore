@@ -39,3 +39,39 @@ db.sqlite3
 # Archivos de sistema
 .DS_Store
 Thumbs.db
+
+# Dependencias Node.js
+node_modules/
+
+# Copias y recuperaciones de configuración local
+dmoj/local_settings*
+
+# Exportaciones de datos de estudiantes
+dmoj_export/
+dmoj_export_filtrado/
+exports_dmoj_impacto/
+
+# Log accidental del bridge
+<desired bridge log path>
+
+# Copias de respaldo manuales
+* (original).*
+* (ORGINAL).*
+* (copia).*
+* (orginal).*
+
+# Archivos temporales de reconstrucción de settings
+dmoj/settings_rebuilt_test.py
+
+# Scripts operativos locales
+crear_cuenta_y_enviar_correo_django_1_usuario.py
+
+# Scripts con datos de estudiantes
+recuperar_progresos_estudiantes.py
+
+# Problemas copiados accidentalmente
+clasificanumeros/
+elchachitojuanito/
+
+# Migración local no versionada
+judge/migrations/0137_auto_20251223_0411.py

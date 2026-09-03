@@ -37,8 +37,14 @@ class PostList(ListView):
         context['first_page_href'] = reverse('home')
         context['page_prefix'] = reverse('blog_post_list')
         context['comments'] = Comment.most_recent(self.request.user, 10)
-        context['new_problems'] = Problem.get_public_problems() \
-                                         .order_by('-date', 'code')[:settings.DMOJ_BLOG_NEW_PROBLEM_COUNT]
+#        context['new_problems'] = Problem.get_public_problems() \
+#                                         .order_by('-date', 'code')[:settings.DMOJ_BLOG_NEW_PROBLEM_COUNT]
+        if self.request.user.is_authenticated:
+            visible_problems = Problem.get_visible_problems(self.request.user)
+        else:
+            visible_problems = Problem.get_public_problems()
+
+        context['new_problems'] = visible_problems.order_by('-date', 'code')[:settings.DMOJ_BLOG_NEW_PROBLEM_COUNT]
         context['page_titles'] = CacheDict(lambda page: Comment.get_page_title(page))
 
         context['has_clarifications'] = False

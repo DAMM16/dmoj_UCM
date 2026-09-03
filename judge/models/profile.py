@@ -229,7 +229,8 @@ class Profile(models.Model):
 
     def calculate_points(self, table=_pp_table):
         from judge.models import Problem
-        public_problems = Problem.get_public_problems()
+        # public_problems = Problem.get_public_problems()
+        public_problems = Problem.objects.all()
         data = (
             public_problems.filter(submission__user=self, submission__points__isnull=False)
                            .annotate(max_points=Max('submission__points')).order_by('-max_points')

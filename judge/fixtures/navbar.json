@@ -1,98 +1,146 @@
 [
-    {
-        "fields": {
-            "key": "problems",
-            "label": "Problems",
-            "level": 0,
-            "lft": 1,
-            "order": 1,
-            "parent": null,
-            "path": "/problems/",
-            "regex": "^/problem",
-            "rght": 2,
-            "tree_id": 1
-        },
-        "model": "judge.navigationbar",
-        "pk": 1
-    },
-    {
-        "fields": {
-            "key": "submit",
-            "label": "Submissions",
-            "level": 0,
-            "lft": 1,
-            "order": 2,
-            "parent": null,
-            "path": "/submissions/",
-            "regex": "^/submi|^/src/",
-            "rght": 2,
-            "tree_id": 2
-        },
-        "model": "judge.navigationbar",
-        "pk": 2
-    },
-    {
-        "fields": {
-            "key": "user",
-            "label": "Users",
-            "level": 0,
-            "lft": 1,
-            "order": 3,
-            "parent": null,
-            "path": "/users/",
-            "regex": "^/user",
-            "rght": 2,
-            "tree_id": 3
-        },
-        "model": "judge.navigationbar",
-        "pk": 3
-    },
-    {
-        "fields": {
-            "key": "contest",
-            "label": "Contests",
-            "level": 0,
-            "lft": 1,
-            "order": 5,
-            "parent": null,
-            "path": "/contests/",
-            "regex": "^/contest",
-            "rght": 2,
-            "tree_id": 4
-        },
-        "model": "judge.navigationbar",
-        "pk": 5
-    },
-    {
-        "fields": {
-            "key": "about",
-            "label": "About",
-            "level": 0,
-            "lft": 1,
-            "order": 6,
-            "parent": null,
-            "path": "/about/",
-            "regex": "^/about/$",
-            "rght": 4,
-            "tree_id": 5
-        },
-        "model": "judge.navigationbar",
-        "pk": 6
-    },
-    {
-        "fields": {
-            "key": "status",
-            "label": "Status",
-            "level": 1,
-            "lft": 2,
-            "order": 7,
-            "parent": 6,
-            "path": "/status/",
-            "regex": "^/status/$|^/judge/",
-            "rght": 3,
-            "tree_id": 5
-        },
-        "model": "judge.navigationbar",
-        "pk": 7
+  {
+    "model": "judge.navigationbar",
+    "pk": 1,
+    "fields": {
+      "key": "problems",
+      "label": "Problemas",
+      "level": 0,
+      "lft": 1,
+      "rght": 8,
+      "tree_id": 1,
+      "order": 1,
+      "parent": null,
+      "path": "/problems/",
+      "regex": "^/problem"
     }
+  },
+  {
+    "model": "judge.navigationbar",
+    "pk": 1001,
+    "fields": {
+      "key": "prob_tut",
+      "label": "Tutorial",
+      "level": 1,
+      "lft": 2,
+      "rght": 3,
+      "tree_id": 1,
+      "order": 1,
+      "parent": 1,
+      "path": "/problems/?category=8",
+      "regex": "^/problems/tutorial/?$"
+    }
+  },
+  {
+    "model": "judge.navigationbar",
+    "pk": 1002,
+    "fields": {
+      "key": "prob_begi",
+      "label": "Principiante I",
+      "level": 1,
+      "lft": 4,
+      "rght": 5,
+      "tree_id": 1,
+      "order": 2,
+      "parent": 1,
+      "path": "/problems/?category=2",
+      "regex": "^/problems/principiante-i/?$"
+    }
+  },
+  {
+    "model": "judge.navigationbar",
+    "pk": 1003,
+    "fields": {
+      "key": "prob_begii",
+      "label": "Principiante II",
+      "level": 1,
+      "lft": 6,
+      "rght": 7,
+      "tree_id": 1,
+      "order": 3,
+      "parent": 1,
+      "path": "/problems/?category=11",
+      "regex": "^/problems/principiante-ii/?$"
+    }
+  },
+  {
+    "model": "judge.navigationbar",
+    "pk": 2,
+    "fields": {
+      "key": "submit",
+      "label": "Sometimientos",
+      "level": 0,
+      "lft": 1,
+      "rght": 2,
+      "tree_id": 2,
+      "order": 2,
+      "parent": null,
+      "path": "/submissions/",
+      "regex": "^/submi|^/src/"
+    }
+  },
+  {
+    "model": "judge.navigationbar",
+    "pk": 3,
+    "fields": {
+      "key": "user",
+      "label": "Usuarios",
+      "level": 0,
+      "lft": 1,
+      "rght": 2,
+      "tree_id": 3,
+      "order": 3,
+      "parent": null,
+      "path": "/users/",
+      "regex": "^/user"
+    }
+  },
+  {
+    "model": "judge.navigationbar",
+    "pk": 5,
+    "fields": {
+      "key": "contest",
+      "label": "Competencias",
+      "level": 0,
+      "lft": 1,
+      "rght": 2,
+      "tree_id": 4,
+      "order": 5,
+      "parent": null,
+      "path": "/contests/",
+      "regex": "^/contest"
+    }
+  },
+  {
+    "model": "judge.navigationbar",
+    "pk": 6,
+    "fields": {
+      "key": "about",
+      "label": "Acerca de",
+      "level": 0,
+      "lft": 1,
+      "rght": 4,
+      "tree_id": 5,
+      "order": 6,
+      "parent": null,
+      "path": "/about/",
+      "regex": "^/about/$"
+    }
+  },
+  {
+    "model": "judge.navigationbar",
+    "pk": 7,
+    "fields": {
+      "key": "status",
+      "label": "Status",
+      "level": 1,
+      "lft": 2,
+      "rght": 3,
+      "tree_id": 5,
+      "order": 7,
+      "parent": 6,
+      "path": "/status/",
+      "regex": "^/status/$|^/judge/"
+    }
+  }
 ]

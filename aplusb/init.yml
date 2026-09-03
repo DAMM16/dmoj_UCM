@@ -1,5 +1,5 @@
-archive: aplusb.zip
+archive: paridad.zip
 test_cases:
 - in: aplusb.1.in
   out: aplusb.1.out
-  points: 1
+  points: 100

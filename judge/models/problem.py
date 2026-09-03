@@ -553,6 +553,17 @@ class Solution(models.Model):
             return True
         if self.problem.is_editable_by(user):
             return True
+###############################################
+        if self.problem.is_organization_private:
+            if not user.is_authenticated:
+                return False
+            if user.has_perm('judge.see_organization_problem'):
+                return True
+            if self.problem.organizations.filter(admins=user.profile).exists():
+                return True
+            if self.problem.organizations.filter(id__in=user.profile.organizations.all()).exists():
+                return True
+###############################################
         return False
 
     class Meta:

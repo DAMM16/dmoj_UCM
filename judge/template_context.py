@@ -58,12 +58,20 @@ def __nav_tab(path):
 
 def general_info(request):
     path = request.get_full_path()
+    profile = getattr(request, 'profile', None)
+    if profile is None and request.user.is_authenticated:
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            profile = None
+    show_icpc_menu = bool(profile and profile.organizations.filter(id=3).exists())
     return {
         'nav_tab': FixedSimpleLazyObject(partial(__nav_tab, request.path)),
         'nav_bar': NavigationBar.objects.all(),
         'LOGIN_RETURN_PATH': '' if path.startswith('/accounts/') else path,
         'perms': PermWrapper(request.user),
         'HAS_WEBAUTHN': bool(settings.WEBAUTHN_RP_ID),
+        'show_icpc_menu': show_icpc_menu,
     }
 
 

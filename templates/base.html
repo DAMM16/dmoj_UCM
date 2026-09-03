@@ -181,6 +181,7 @@
             <li class="home-nav-element"><a href="{{ url('home') }}">{% include "site-logo-fragment.html" %}</a></li>
             <li class="home-nav-element"><span class="nav-divider"></span></li>
             <li class="home-menu-item"><a href="{{ url('home') }}" class="nav-home">{{ _('Home') }}</a></li>
+
             {% for node in mptt_tree(nav_bar) recursive %}
                 <li>
                     <a href="{{ node.path }}" class="nav-{{ node.key }}{% if node.key in nav_tab %} active{% endif %}">
@@ -194,6 +195,9 @@
                     {% endwith %}
                 </li>
             {% endfor %}
+            {% if show_icpc_menu %}
+                <li><a href="/icpc/" class="nav-icpc">{{ _('ICPC') }}</a></li>
+            {% endif %}
         </ul>
 
         <span id="user-links">
@@ -227,8 +231,8 @@
             {% else %}
                 <span class="anon">
                     <a href="{{ url('auth_login') }}?next={{ LOGIN_RETURN_PATH|urlencode }}"><b>{{ _('Log in') }}</b></a>
-                    &nbsp;{{ _('or') }}&nbsp;
-                    <a href="{{ url('registration_register') }}"><b>{{ _('Sign up') }}</b></a>
+                    <!-- &nbsp;{{ _('or') }}&nbsp; -->
+                    <!-- <a href="{{ url('registration_register') }}"><b>{{ _('Sign up') }}</b></a> -->
                 </span>
             {% endif %}
         </span>

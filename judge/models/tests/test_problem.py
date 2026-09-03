@@ -358,6 +358,18 @@ class SolutionTestCase(CommonDataMixin, TestCase):
             publish_on=now + timezone.timedelta(days=100),
             authors=('normal',),
         )
+        ############################################
+                self.organization_private_solution = create_solution(
+            problem=create_problem(
+                code='organization-private-solution',
+                is_public=True,
+                is_organization_private=True,
+                organizations=('open',),
+            ),
+            is_public=False,
+            publish_on=now - timezone.timedelta(days=1),
+        )
+########################################################
 
     def test_unpublished_solution(self):
         self.assertEqual(str(self.unpublished_solution), 'Editorial for Unpublished')
@@ -430,7 +442,18 @@ class SolutionTestCase(CommonDataMixin, TestCase):
             },
         }
         self._test_object_methods_with_users(self.unpublished_solution, data)
+###########################33
+    def test_organization_private_solution_access(self):
+        solution = self.organization_private_solution
+        normal_user = self.users['normal']
+        self.assertFalse(solution.is_accessible_by(normal_user))
 
+        normal_user.profile.organizations.add(self.organizations['open'])
+        self.assertTrue(solution.is_accessible_by(normal_user))
+
+        self.assertTrue(solution.is_accessible_by(self.users['staff_problem_see_organization']))
+
+############################
 
 class DisallowedCharactersValidatorTestCase(SimpleTestCase):
     def test_valid(self):
