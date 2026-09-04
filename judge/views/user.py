@@ -21,6 +21,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import date_format
 from django.utils.functional import cached_property
+from django.utils.html import escape, format_html, format_html_join
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.decorators.http import require_POST
@@ -38,6 +39,7 @@ from judge.utils.pwned import PwnedPasswordsValidator
 from judge.utils.ranker import ranker
 from judge.utils.subscription import Subscription
 from judge.utils.unicode import utf8text
+from judge.utils.users import filter_users_by_shared_class
 from judge.utils.views import DiggPaginatorMixin, QueryStringSortMixin, TitleMixin, add_file_response, generic_message
 from .contests import ContestRanking
 
@@ -434,26 +436,70 @@ class UserList(QueryStringSortMixin, DiggPaginatorMixin, TitleMixin, ListView):
     all_sorts = frozenset(('points', 'problem_count', 'rating', 'performance_points'))
     default_desc = all_sorts
     default_sort = '-performance_points'
+    filter_by_class = True
+    leaderboard_tab = 'list'
+    list_url_name = 'user_list'
+    search_url_name = 'user_search_select2_ajax'
+    ranking_redirect_url_name = 'user_ranking_redirect'
+
+    @cached_property
+    def ranking_classes(self):
+        if not self.filter_by_class or not self.request.user.is_authenticated:
+            return []
+        return list(self.request.profile.classes.select_related('organization'))
+
+    def get_content_title(self):
+        if len(self.ranking_classes) == 1:
+            class_ = self.ranking_classes[0]
+            organization = class_.organization
+            return mark_safe(escape(_('Class {name} in {organization}')).format(
+                name=escape(class_.name),
+                organization=format_html(
+                    '<a href="{0}">{1}</a>', organization.get_absolute_url(), organization.name,
+                ),
+            ))
+        elif self.ranking_classes:
+            class_links = format_html_join(
+                ', ', '<a href="{}">{}</a>',
+                ((class_.get_absolute_url(), class_.name) for class_ in self.ranking_classes),
+            )
+            return format_html('{}: {}', _('Classes'), class_links)
+        return super().get_content_title()
 
     def get_queryset(self):
-        return (Profile.objects.filter(is_unlisted=False).order_by(self.order).select_related('user')
-                .only('display_rank', 'user__username', 'points', 'rating', 'performance_points',
-                      'problem_count'))
+        queryset = Profile.objects.filter(is_unlisted=False)
+        if self.filter_by_class:
+            queryset = filter_users_by_shared_class(queryset, self.request.user)
+        return (queryset.order_by(self.order).select_related('user')
+                .only('display_rank', 'user__username', 'points', 'rating', 'performance_points', 'problem_count'))
 
     def get_context_data(self, **kwargs):
         context = super(UserList, self).get_context_data(**kwargs)
+        context['ranking_classes'] = self.ranking_classes
+        context['leaderboard_tab'] = self.leaderboard_tab
+        context['user_search_url'] = reverse(self.search_url_name)
+        context['user_ranking_redirect_url'] = reverse(self.ranking_redirect_url_name)
         context['users'] = ranker(
             context['users'],
             key=attrgetter('performance_points', 'problem_count'),
             rank=self.paginate_by * (context['page_obj'].number - 1),
         )
-        context['first_page_href'] = '.'
+        context['first_page_href'] = reverse(self.list_url_name)
         context.update(self.get_sort_context())
         context.update(self.get_sort_paginate_context())
         return context
 
 
 user_list_view = UserList.as_view()
+
+
+class GlobalUserList(UserList):
+    title = gettext_lazy('Global leaderboard')
+    filter_by_class = False
+    leaderboard_tab = 'global_list'
+    list_url_name = 'global_user_list'
+    search_url_name = 'global_user_search_select2_ajax'
+    ranking_redirect_url_name = 'global_user_ranking_redirect'
 
 
 class FixedContestRanking(ContestRanking):
@@ -472,18 +518,31 @@ def users(request):
     return user_list_view(request)
 
 
-def user_ranking_redirect(request):
+def _user_ranking_redirect(request, visible_users, list_url_name):
     try:
         username = request.GET['handle']
     except KeyError:
         raise Http404()
-    user = get_object_or_404(Profile, user__username=username)
-    rank = Profile.objects.filter(is_unlisted=False, performance_points__gt=user.performance_points).count()
-    rank += Profile.objects.filter(
+    user = get_object_or_404(visible_users, user__username=username)
+    rank = visible_users.filter(performance_points__gt=user.performance_points).count()
+    rank += visible_users.filter(
         is_unlisted=False, performance_points__exact=user.performance_points, id__lt=user.id,
     ).count()
     page = rank // UserList.paginate_by
-    return HttpResponseRedirect('%s%s#!%s' % (reverse('user_list'), '?page=%d' % (page + 1) if page else '', username))
+    return HttpResponseRedirect('%s%s#!%s' % (
+        reverse(list_url_name), '?page=%d' % (page + 1) if page else '', username,
+    ))
+
+
+def user_ranking_redirect(request):
+    visible_users = filter_users_by_shared_class(Profile.objects.filter(is_unlisted=False), request.user)
+    return _user_ranking_redirect(request, visible_users, 'user_list')
+
+
+def global_user_ranking_redirect(request):
+    return _user_ranking_redirect(
+        request, Profile.objects.filter(is_unlisted=False), 'global_user_list',
+    )
 
 
 class UserLogoutView(TitleMixin, TemplateView):

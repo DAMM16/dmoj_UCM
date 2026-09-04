@@ -20,8 +20,8 @@ from judge.views.problem_data import ProblemDataView, ProblemSubmissionDiff, \
     problem_data_file, problem_init_view
 from judge.views.register import ActivationView, RegistrationView
 from judge.views.select2 import AssigneeSelect2View, ClassSelect2View, CommentSelect2View, ContestSelect2View, \
-    ContestUserSearchSelect2View, OrganizationSelect2View, ProblemSelect2View, TicketUserSelect2View, \
-    UserSearchSelect2View, UserSelect2View
+    ContestUserSearchSelect2View, GlobalUserSearchSelect2View, OrganizationSelect2View, ProblemSelect2View, \
+    TicketUserSelect2View, UserSearchSelect2View, UserSelect2View
 from judge.views.widgets import martor_image_uploader
 
 admin.autodiscover()
@@ -154,6 +154,8 @@ urlpatterns = [
 
     path('users/', include([
         path('', user.users, name='user_list'),
+        path('global/', user.GlobalUserList.as_view(), name='global_user_list'),
+        path('global/find', user.global_user_ranking_redirect, name='global_user_ranking_redirect'),
         path('<int:page>', lambda request, page:
              HttpResponsePermanentRedirect('%s?page=%s' % (reverse('user_list'), page))),
         path('find', user.user_ranking_redirect, name='user_ranking_redirect'),
@@ -298,6 +300,8 @@ urlpatterns = [
 
         path('select2/', include([
             path('user_search', UserSearchSelect2View.as_view(), name='user_search_select2_ajax'),
+            path('global_user_search', GlobalUserSearchSelect2View.as_view(),
+                 name='global_user_search_select2_ajax'),
             path('contest_users/<str:contest>', ContestUserSearchSelect2View.as_view(),
                  name='contest_user_search_select2_ajax'),
             path('ticket_user', TicketUserSelect2View.as_view(), name='ticket_user_select2_ajax'),

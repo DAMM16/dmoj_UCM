@@ -2,5 +2,6 @@
 
 {% block tabs %}
     {{ make_tab('list', 'fa-users', url('user_list'), _('Leaderboard')) }}
+    {{ make_tab('global_list', 'fa-globe', url('global_user_list'), _('Global leaderboard')) }}
     {{ make_tab('organizations', 'fa-university', url('organization_list'), _('Organizations')) }}
 {% endblock %}

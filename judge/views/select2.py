@@ -6,6 +6,7 @@ from django.views.generic.list import BaseListView
 
 from judge.jinja2.gravatar import gravatar
 from judge.models import Class, Comment, Contest, Organization, Problem, Profile
+from judge.utils.users import filter_users_by_shared_class
 
 
 def _get_user_queryset(term):
@@ -78,7 +79,7 @@ class UserSearchSelect2View(BaseListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return _get_user_queryset(self.term)
+        return filter_users_by_shared_class(_get_user_queryset(self.term), self.request.user)
 
     def get(self, request, *args, **kwargs):
         self.request = request
@@ -105,6 +106,11 @@ class UserSearchSelect2View(BaseListView):
 
     def get_name(self, obj):
         return str(obj)
+
+
+class GlobalUserSearchSelect2View(UserSearchSelect2View):
+    def get_queryset(self):
+        return _get_user_queryset(self.term)
 
 
 class ContestUserSearchSelect2View(UserSearchSelect2View):

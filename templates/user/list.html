@@ -3,7 +3,7 @@
 {% block title_ruler %}{% endblock %}
 
 {% block title_row %}
-    {% set tab = 'list' %}
+    {% set tab = leaderboard_tab or 'list' %}
     {% include "user/user-list-tabs.html" %}
 {% endblock %}
 
