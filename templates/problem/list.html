@@ -2,6 +2,17 @@
 
 {% block media %}
     <link rel="stylesheet" href="{{ static('libs/nouislider.min.css') }}">
+    <style>
+        #problem-table th.category,
+        #problem-table td.category {
+            width: 12%;
+            box-sizing: border-box;
+        }
+
+        #problem-table td.problem {
+            width: auto;
+        }
+    </style>
     <noscript>
         <style>#category, #types {
             visibility: visible;
