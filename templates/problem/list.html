@@ -12,6 +12,19 @@
         #problem-table td.problem {
             width: auto;
         }
+
+        #problem-table th:not(.problem):not(.category),
+        #problem-table td:not(.problem):not(.category) {
+            width: 1%;
+            white-space: nowrap;
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        #problem-table th:not(.problem):not(.category) a {
+            padding-left: 4px;
+            padding-right: 4px;
+        }
     </style>
     <noscript>
         <style>#category, #types {
